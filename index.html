@@ -1,0 +1,246 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>MacroBase — Coming soon</title>
+  <meta name="description" content="MacroBase is coming soon. Your macros, training and recovery in one simple dashboard." />
+  <meta name="theme-color" content="#07080a" />
+  <meta property="og:title" content="MacroBase — Coming soon" />
+  <meta property="og:description" content="Your macros. Decoded. Launching soon." />
+  <meta property="og:type" content="website" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%23c8ff3d'/%3E%3Cpath d='M14 46V18h7l11 15 11-15h7v28h-7V30L32 44 21 30v16z' fill='%2307080a'/%3E%3C/svg%3E" />
+  <style>
+    :root {
+      --bg: #07080a;
+      --text: #f3f5f2;
+      --muted: #9aa19b;
+      --lime: #c8ff3d;
+      --line: rgba(255, 255, 255, 0.1);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100svh;
+      display: grid;
+      place-items: center;
+      padding: 32px 24px;
+      background: var(--bg);
+      color: var(--text);
+      font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    /* soft glow + faint grid, no images or fonts needed */
+    body::before {
+      content: "";
+      position: fixed;
+      inset: -20%;
+      background:
+        radial-gradient(circle at 20% 15%, rgba(200, 255, 61, 0.16), transparent 42%),
+        radial-gradient(circle at 85% 80%, rgba(139, 124, 255, 0.14), transparent 45%);
+      filter: blur(40px);
+      pointer-events: none;
+    }
+
+    body::after {
+      content: "";
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(to right, rgba(255, 255, 255, 0.04) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
+      background-size: 64px 64px;
+      mask-image: radial-gradient(ellipse 70% 60% at 50% 40%, #000, transparent 75%);
+      -webkit-mask-image: radial-gradient(ellipse 70% 60% at 50% 40%, #000, transparent 75%);
+      pointer-events: none;
+    }
+
+    main {
+      position: relative;
+      z-index: 1;
+      text-align: center;
+      max-width: 640px;
+    }
+
+    .brand {
+      display: flex;
+      width: max-content;
+      margin: 0 auto 36px;
+      align-items: center;
+      gap: 10px;
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      font-size: 1rem;
+    }
+
+    .mark {
+      width: 32px;
+      height: 32px;
+      display: grid;
+      place-items: center;
+      background: var(--lime);
+      color: var(--bg);
+      border-radius: 10px;
+      box-shadow: 0 8px 30px -10px rgba(200, 255, 61, 0.6);
+    }
+
+    .mark svg { width: 18px; height: 18px; }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 13px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.03);
+      font-size: 0.68rem;
+      font-weight: 500;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--lime);
+      box-shadow: 0 0 10px rgba(200, 255, 61, 0.9);
+      animation: pulse 2.4s ease-out infinite;
+    }
+
+    @keyframes pulse {
+      50% { opacity: 0.45; }
+    }
+
+    h1 {
+      margin: 22px 0 0;
+      font-size: clamp(2.6rem, 9vw, 5rem);
+      line-height: 1.02;
+      letter-spacing: -0.05em;
+      font-weight: 700;
+    }
+
+    h1 em {
+      font-style: normal;
+      background: linear-gradient(100deg, var(--lime), #6ff5c3 55%, #a79bff);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    p {
+      margin: 20px auto 0;
+      max-width: 42ch;
+      color: var(--muted);
+      font-size: 1rem;
+      line-height: 1.65;
+      text-wrap: pretty;
+    }
+
+    .links {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 36px;
+    }
+
+    a.btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 20px;
+      border-radius: 999px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      text-decoration: none;
+      transition: transform 0.25s ease, background 0.25s ease, border-color 0.25s ease;
+    }
+
+    a.primary {
+      background: var(--lime);
+      color: var(--bg);
+      border: 1px solid var(--lime);
+    }
+
+    a.primary:hover {
+      background: #d7ff6e;
+      transform: translateY(-2px);
+    }
+
+    a.ghost {
+      border: 1px solid var(--line);
+      color: var(--text);
+      background: rgba(255, 255, 255, 0.02);
+    }
+
+    a.ghost:hover {
+      background: rgba(255, 255, 255, 0.06);
+      border-color: rgba(255, 255, 255, 0.22);
+      transform: translateY(-2px);
+    }
+
+    a.btn svg { width: 15px; height: 15px; }
+
+    footer {
+      margin-top: 56px;
+      font-size: 0.72rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: #6c736d;
+    }
+
+    :focus-visible {
+      outline: 2px solid var(--lime);
+      outline-offset: 3px;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation: none !important; transition: none !important; }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <div class="brand">
+      <span class="mark" aria-hidden="true">
+        <svg viewBox="0 0 64 64" fill="currentColor"><path d="M14 48V16h7l11 16 11-16h7v32h-8V30L32 46 22 30v18z"/></svg>
+      </span>
+      MacroBase
+    </div>
+
+    <div class="badge"><span class="dot" aria-hidden="true"></span> Launching soon</div>
+
+    <h1>Your macros.<br /><em>Decoded.</em></h1>
+
+    <p>
+      Food, training and recovery in one brutally simple dashboard.
+      We're putting the finishing touches on it — check back soon.
+    </p>
+
+    <div class="links">
+      <a class="btn primary" href="https://github.com/conormccr19/macro-base">
+        Follow the build
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+      </a>
+      <a class="btn ghost" href="https://github.com/conormccr19/macro-base/issues">
+        Get in touch
+      </a>
+    </div>
+
+    <footer>© <span id="year">2026</span> MacroBase · Built in Ireland</footer>
+  </main>
+
+  <script>
+    document.getElementById("year").textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>
