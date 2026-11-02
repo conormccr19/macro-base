@@ -4,14 +4,14 @@ Coming soon page for MacroBase — a single static `index.html`, no build step.
 
 The page is served with **GitHub Pages** from the `main` branch root:
 
-> https://conormccr19.github.io/macro-base/
+> https://macro-base.app/
 
 ## Editing
 
 - `index.html` — the live landing page.
 - `mega.html` — a longer, feature-rich version of the landing page (unlinked, kept for later use).
 
-Everything is inline (CSS, SVG, JS), so there are no fonts or assets to load and no dependencies to install.
+The page uses Google Fonts (Fraunces + IBM Plex Mono) and the team photos in the repo root. Everything else is inline, so there are no dependencies to install.
 
 ## Local preview
 

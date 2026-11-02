@@ -3,345 +3,1176 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>MacroBase — Coming soon</title>
-  <meta name="description" content="MacroBase is coming soon. Your macros, training and recovery in one simple dashboard." />
-  <meta name="theme-color" content="#07080a" />
-  <meta property="og:title" content="MacroBase — Coming soon" />
-  <meta property="og:description" content="Your macros. Decoded. Launching soon." />
+  <title>MacroBase — Your macros. Decoded.</title>
+  <meta name="description" content="MacroBase is the base layer for hitting your numbers. Food, training and recovery in one brutally simple dashboard. Coming soon from Dublin." />
+  <meta name="theme-color" content="#F4EAD5" />
+  <meta name="color-scheme" content="light" />
+
+  <!-- Open Graph / social -->
   <meta property="og:type" content="website" />
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%23c8ff3d'/%3E%3Cpath d='M14 46V18h7l11 15 11-15h7v28h-7V30L32 44 21 30v16z' fill='%2307080a'/%3E%3C/svg%3E" />
+  <meta property="og:title" content="MacroBase — Your macros. Decoded." />
+  <meta property="og:description" content="Food, training and recovery in one brutally simple dashboard. The numbers you need, minus the spreadsheet archaeology." />
+  <meta property="og:url" content="https://macro-base.app/" />
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="MacroBase — Your macros. Decoded." />
+  <meta name="twitter:description" content="Food, training and recovery in one brutally simple dashboard. Coming soon." />
+
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' fill='%23E8A92B'/%3E%3Crect x='2' y='2' width='60' height='60' fill='none' stroke='%232B1D14' stroke-width='4'/%3E%3Cpath d='M14 48V16h7l11 16 11-16h7v32h-8V30L32 46 22 30v18z' fill='%232B1D14'/%3E%3C/svg%3E" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400..900;1,9..144,400..900&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+
   <style>
+    /* ------------------------------------------------------------------ tokens */
     :root {
-      --bg: #07080a;
-      --text: #f3f5f2;
-      --muted: #9aa19b;
-      --lime: #c8ff3d;
-      --line: rgba(255, 255, 255, 0.1);
+      --paper: #F4EAD5;
+      --ink: #2B1D14;
+      --tomato: #D6402B;
+      --mustard: #E8A92B;
+      --olive: #6B7A2E;
+      --teal: #3E7C7A;
+
+      /* ink/paper with alpha keeps the six-colour palette honest */
+      --ink-soft: rgba(43, 29, 20, 0.72);
+      --ink-rule: rgba(43, 29, 20, 0.3);
+      --ink-faint: rgba(43, 29, 20, 0.16);
+      --paper-soft: rgba(244, 234, 213, 0.76);
+
+      --border: 2px solid var(--ink);
+      --shadow: 5px 5px 0 var(--ink);
+      --shadow-sm: 3px 3px 0 var(--ink);
+
+      --font-display: "Fraunces", Georgia, "Times New Roman", serif;
+      --font-mono: "IBM Plex Mono", "Courier New", Courier, monospace;
+
+      --wrap: 1160px;
+      --gutter: clamp(1.1rem, 4vw, 2rem);
+      --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
     }
 
-    * { box-sizing: border-box; }
+    /* ------------------------------------------------------------------ reset */
+    *, *::before, *::after { box-sizing: border-box; }
+
+    html {
+      scroll-behavior: smooth;
+      -webkit-text-size-adjust: 100%;
+    }
 
     body {
       margin: 0;
-      min-height: 100svh;
-      display: grid;
-      place-items: center;
-      padding: 32px 24px;
-      background: var(--bg);
-      color: var(--text);
-      font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-      -webkit-font-smoothing: antialiased;
+      background: var(--paper);
+      color: var(--ink);
+      font-family: var(--font-mono);
+      font-size: 16px;
+      line-height: 1.6;
       overflow-x: hidden;
-      position: relative;
+      -webkit-font-smoothing: antialiased;
     }
 
-    /* soft glow + faint grid, no images or fonts needed */
+    /* A sheet of cheap, warm paper over everything. No images to load. */
     body::before {
       content: "";
       position: fixed;
-      inset: -20%;
-      background:
-        radial-gradient(circle at 20% 15%, rgba(200, 255, 61, 0.16), transparent 42%),
-        radial-gradient(circle at 85% 80%, rgba(139, 124, 255, 0.14), transparent 45%);
-      filter: blur(40px);
-      pointer-events: none;
-    }
-
-    body::after {
-      content: "";
-      position: fixed;
       inset: 0;
-      background-image:
-        linear-gradient(to right, rgba(255, 255, 255, 0.04) 1px, transparent 1px),
-        linear-gradient(to bottom, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
-      background-size: 64px 64px;
-      mask-image: radial-gradient(ellipse 70% 60% at 50% 40%, #000, transparent 75%);
-      -webkit-mask-image: radial-gradient(ellipse 70% 60% at 50% 40%, #000, transparent 75%);
+      z-index: 999;
       pointer-events: none;
+      opacity: 0.055;
+      mix-blend-mode: multiply;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E");
+      background-size: 180px 180px;
     }
 
-    main {
-      position: relative;
-      z-index: 1;
-      text-align: center;
-      max-width: 860px;
+    ::selection {
+      background: var(--mustard);
+      color: var(--ink);
+    }
+
+    img { display: block; max-width: 100%; }
+
+    a {
+      color: inherit;
+      text-decoration-thickness: 1.5px;
+      text-underline-offset: 3px;
+    }
+
+    button, input { font: inherit; color: inherit; }
+
+    h1, h2, h3 {
+      margin: 0;
+      font-family: var(--font-display);
+      font-weight: 900;
+      line-height: 0.9;
+      letter-spacing: -0.045em;
+    }
+
+    p { margin: 0; }
+
+    :focus-visible {
+      outline: 3px solid var(--tomato);
+      outline-offset: 3px;
+    }
+
+    .wrap {
+      width: min(calc(100% - (2 * var(--gutter))), var(--wrap));
+      margin-inline: auto;
+    }
+
+    .skip-link {
+      position: fixed;
+      top: 12px;
+      left: 12px;
+      z-index: 1000;
+      transform: translateY(-160%);
+      padding: 0.55rem 0.8rem;
+      border: var(--border);
+      background: var(--mustard);
+      font-size: 0.68rem;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      text-decoration: none;
+      transition: transform 0.12s steps(2, end);
+    }
+
+    .skip-link:focus { transform: none; }
+
+    /* ------------------------------------------------------------------ masthead */
+    .masthead { border-bottom: var(--border); }
+
+    .masthead__inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      padding-block: 1rem;
     }
 
     .brand {
-      display: flex;
-      width: max-content;
-      margin: 0 auto 36px;
-      align-items: center;
-      gap: 10px;
-      font-weight: 700;
-      letter-spacing: -0.03em;
-      font-size: 1rem;
-    }
-
-    .mark {
-      width: 32px;
-      height: 32px;
-      display: grid;
-      place-items: center;
-      background: var(--lime);
-      color: var(--bg);
-      border-radius: 10px;
-      box-shadow: 0 8px 30px -10px rgba(200, 255, 61, 0.6);
-    }
-
-    .mark svg { width: 18px; height: 18px; }
-
-    .badge {
       display: inline-flex;
       align-items: center;
-      gap: 8px;
-      padding: 6px 13px;
-      border: 1px solid var(--line);
-      border-radius: 999px;
-      background: rgba(255, 255, 255, 0.03);
-      font-size: 0.68rem;
+      gap: 0.7rem;
+      text-decoration: none;
+    }
+
+    .brand__mark {
+      width: 42px;
+      height: 42px;
+      display: grid;
+      place-items: center;
+      flex: none;
+      border: var(--border);
+      border-radius: 2px;
+      background: var(--mustard);
+      box-shadow: var(--shadow-sm);
+      font-family: var(--font-display);
+      font-size: 1.35rem;
+      font-weight: 900;
+      font-style: italic;
+      line-height: 1;
+      transform: rotate(-3deg);
+    }
+
+    .brand__word {
+      display: block;
+      font-family: var(--font-display);
+      font-size: 1.3rem;
+      font-weight: 900;
+      letter-spacing: -0.045em;
+      line-height: 1;
+    }
+
+    .brand__word span {
+      display: block;
+      margin-top: 5px;
+      font-family: var(--font-mono);
+      font-size: 0.52rem;
       font-weight: 500;
+      letter-spacing: 0.15em;
+      line-height: 1.2;
+      text-transform: uppercase;
+      color: var(--ink-soft);
+    }
+
+    .masthead__tag {
+      max-width: 34ch;
+      font-size: 0.7rem;
+      line-height: 1.4;
+      color: var(--ink-soft);
+    }
+
+    .masthead__link {
+      flex: none;
+      padding-bottom: 2px;
+      border-bottom: 2px solid var(--tomato);
+      font-size: 0.65rem;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      text-decoration: none;
+      white-space: nowrap;
+    }
+
+    .masthead__link:hover { background: var(--mustard); }
+
+    /* ------------------------------------------------------------------ hero */
+    .hero { padding-block: clamp(2.8rem, 7vw, 6.5rem) clamp(3rem, 7vw, 6rem); }
+
+    .hero__grid {
+      display: grid;
+      gap: clamp(2.5rem, 6vw, 4.5rem);
+    }
+
+    .hero__meta {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 0.8rem 1rem;
+      margin-bottom: clamp(1.5rem, 4vw, 2.3rem);
+    }
+
+    .stamp {
+      --rot: -2deg;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.38rem 0.72rem;
+      border: var(--border);
+      border-radius: 2px;
+      background: var(--paper);
+      box-shadow: var(--shadow-sm);
+      color: var(--ink);
+      font-size: 0.6rem;
+      font-weight: 600;
+      letter-spacing: 0.13em;
+      line-height: 1.2;
+      text-transform: uppercase;
+      transform: rotate(var(--rot));
+    }
+
+    .stamp--mustard { background: var(--mustard); }
+
+    .stamp:hover { animation: jiggle 0.3s steps(2, end); }
+
+    .hero__batch {
+      font-size: 0.6rem;
       letter-spacing: 0.14em;
       text-transform: uppercase;
-      color: var(--muted);
+      color: var(--ink-soft);
     }
 
-    .dot {
-      width: 7px;
-      height: 7px;
-      border-radius: 50%;
-      background: var(--lime);
-      box-shadow: 0 0 10px rgba(200, 255, 61, 0.9);
-      animation: pulse 2.4s ease-out infinite;
+    .hero__title {
+      font-size: clamp(3rem, 9vw, 6.5rem);
+      line-height: 0.83;
+      letter-spacing: -0.055em;
+      word-spacing: 0.1em;
+      text-wrap: balance;
     }
 
-    @keyframes pulse {
-      50% { opacity: 0.45; }
+    .hero__decoded {
+      position: relative;
+      display: block;
+      width: fit-content;
+      max-width: 100%;
+      margin-top: 0.04em;
+      padding-right: 0.08em;
+      color: var(--tomato);
+      font-style: italic;
     }
 
-    h1 {
-      margin: 22px 0 0;
-      font-size: clamp(2.6rem, 9vw, 5rem);
-      line-height: 1.02;
-      letter-spacing: -0.05em;
-      font-weight: 700;
+    .hero__underline {
+      position: absolute;
+      left: 0;
+      bottom: -0.08em;
+      width: 100%;
+      height: 0.12em;
+      overflow: visible;
+      color: var(--olive);
     }
 
-    h1 em {
-      font-style: normal;
-      background: linear-gradient(100deg, var(--lime), #6ff5c3 55%, #a79bff);
-      -webkit-background-clip: text;
-      background-clip: text;
-      color: transparent;
+    .hero__underline path {
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 5;
+      stroke-linecap: round;
     }
 
-    p {
-      margin: 20px auto 0;
-      max-width: 42ch;
-      color: var(--muted);
-      font-size: 1rem;
-      line-height: 1.65;
+    .hero__lede {
+      max-width: 46ch;
+      margin-top: clamp(1.4rem, 4vw, 2rem);
+      font-size: 0.92rem;
+      line-height: 1.75;
+      color: var(--ink-soft);
       text-wrap: pretty;
     }
 
-    .links {
+    .hero__actions {
       display: flex;
-      justify-content: center;
-      align-items: center;
-      gap: 12px;
       flex-wrap: wrap;
-      margin-top: 36px;
+      gap: 0.8rem;
+      margin-top: clamp(1.6rem, 4vw, 2.2rem);
     }
 
-    a.btn {
+    .btn {
       display: inline-flex;
       align-items: center;
-      gap: 8px;
-      padding: 12px 20px;
-      border-radius: 999px;
-      font-size: 0.9rem;
-      font-weight: 600;
-      text-decoration: none;
-      transition: transform 0.25s ease, background 0.25s ease, border-color 0.25s ease;
-    }
-
-    a.primary {
-      background: var(--lime);
-      color: var(--bg);
-      border: 1px solid var(--lime);
-    }
-
-    a.primary:hover {
-      background: #d7ff6e;
-      transform: translateY(-2px);
-    }
-
-    a.ghost {
-      border: 1px solid var(--line);
-      color: var(--text);
-      background: rgba(255, 255, 255, 0.02);
-    }
-
-    a.ghost:hover {
-      background: rgba(255, 255, 255, 0.06);
-      border-color: rgba(255, 255, 255, 0.22);
-      transform: translateY(-2px);
-    }
-
-    a.btn svg { width: 15px; height: 15px; }
-
-    .team {
-      margin-top: 64px;
-      padding-top: 44px;
-      border-top: 1px solid var(--line);
-    }
-
-    .eyebrow {
-      margin: 0 auto;
-      font-size: 0.68rem;
-      font-weight: 600;
-      letter-spacing: 0.14em;
-      text-transform: uppercase;
-      color: var(--lime);
-    }
-
-    .team h2 {
-      margin: 10px 0 28px;
-      font-size: clamp(1.5rem, 3.6vw, 2rem);
-      letter-spacing: -0.04em;
-      font-weight: 700;
-    }
-
-    .team-grid {
-      display: grid;
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-      gap: 14px;
-      text-align: left;
-    }
-
-    .member {
-      padding: 10px 10px 16px;
-      border: 1px solid var(--line);
-      border-radius: 16px;
-      background: rgba(255, 255, 255, 0.03);
-      transition: transform 0.25s ease, background 0.25s ease, border-color 0.25s ease;
-    }
-
-    .member:hover {
-      transform: translateY(-3px);
-      background: rgba(255, 255, 255, 0.055);
-      border-color: rgba(255, 255, 255, 0.2);
-    }
-
-    .member img {
-      width: 100%;
-      aspect-ratio: 1 / 1;
-      object-fit: cover;
-      object-position: center 30%;
-      border-radius: 11px;
-      background: #101214;
-    }
-
-    .member h3 {
-      margin: 13px 2px 0;
-      font-size: 0.9rem;
-      font-weight: 600;
-      letter-spacing: -0.01em;
-    }
-
-    .member .role {
-      margin: 3px 2px 0;
-      max-width: none;
+      justify-content: center;
+      gap: 0.55rem;
+      min-height: 48px;
+      padding: 0.8rem 1.1rem;
+      border: var(--border);
+      border-radius: 2px;
+      background: var(--paper);
+      box-shadow: var(--shadow);
+      font-family: var(--font-mono);
       font-size: 0.7rem;
       font-weight: 600;
       letter-spacing: 0.1em;
       text-transform: uppercase;
-      color: var(--muted);
+      text-decoration: none;
+      transition: transform 0.08s steps(2, end), box-shadow 0.08s steps(2, end),
+                  background-color 0.15s ease, color 0.15s ease;
     }
 
-    @media (max-width: 620px) {
-      .team-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    /* The button is a physical key: hit it and the shadow disappears. */
+    .btn:hover {
+      transform: translate(2px, 2px);
+      box-shadow: 2px 2px 0 var(--ink);
+      background: var(--ink);
+      color: var(--paper);
     }
 
-    footer {
-      margin-top: 56px;
-      font-size: 0.72rem;
-      letter-spacing: 0.08em;
+    .btn:active {
+      transform: translate(4px, 4px);
+      box-shadow: none;
+    }
+
+    .btn--primary { background: var(--mustard); }
+
+    .btn--primary:hover { background: var(--ink); color: var(--paper); }
+
+    .btn svg { width: 15px; height: 15px; flex: none; }
+
+    .hero__fineprint {
+      margin-top: 1rem;
+      font-size: 0.66rem;
+      letter-spacing: 0.02em;
+      color: var(--ink-soft);
+    }
+
+    .hero__fineprint span { font-weight: 600; }
+
+    /* ------------------------------------------------------------------ hero label */
+    .hero__label {
+      position: relative;
+      width: 100%;
+      max-width: 370px;
+      margin-inline: auto;
+    }
+
+    .price-tag {
+      --rot: 3deg;
+      position: absolute;
+      top: -1.2rem;
+      right: 0;
+      z-index: 2;
+      padding: 0.55rem 0.7rem 0.55rem 1.45rem;
+      border: var(--border);
+      border-radius: 2px;
+      background: var(--mustard);
+      box-shadow: var(--shadow-sm);
+      font-size: 0.54rem;
+      font-weight: 600;
+      letter-spacing: 0.13em;
+      line-height: 1.35;
       text-transform: uppercase;
-      color: #6c736d;
+      transform: rotate(var(--rot));
     }
 
-    :focus-visible {
-      outline: 2px solid var(--lime);
-      outline-offset: 3px;
+    /* the punched hole in the tag */
+    .price-tag::before {
+      content: "";
+      position: absolute;
+      top: 50%;
+      left: 8px;
+      width: 7px;
+      height: 7px;
+      border: 2px solid var(--ink);
+      border-radius: 50%;
+      background: var(--paper);
+      transform: translateY(-50%);
+    }
+
+    .price-tag strong {
+      display: block;
+      margin-top: 0.15rem;
+      font-family: var(--font-display);
+      font-size: 1.15rem;
+      font-weight: 900;
+      letter-spacing: -0.02em;
+      line-height: 1;
+    }
+
+    .price-tag:hover { animation: jiggle 0.3s steps(2, end); }
+
+    .nutrition {
+      border: var(--border);
+      background: var(--paper);
+      box-shadow: 6px 6px 0 var(--ink);
+      transform: rotate(1.1deg);
+    }
+
+    .nutrition__head {
+      padding: 1rem 1.05rem 0.85rem;
+      border-bottom: var(--border);
+      background: var(--mustard);
+    }
+
+    .nutrition__brand {
+      font-size: 0.58rem;
+      font-weight: 600;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+    }
+
+    .nutrition__head h2 {
+      margin-top: 0.15rem;
+      font-size: clamp(1.65rem, 4vw, 2rem);
+      letter-spacing: -0.04em;
+    }
+
+    .nutrition__sub {
+      margin-top: 0.25rem;
+      font-size: 0.58rem;
+      letter-spacing: 0.04em;
+    }
+
+    .nutrition__bar {
+      height: 9px;
+      background: var(--ink);
+    }
+
+    .nutrition__body { padding: 0.75rem 1.05rem 0.85rem; }
+
+    .nutrition__row {
+      display: flex;
+      justify-content: space-between;
+      gap: 1rem;
+      padding-block: 0.42rem;
+      border-bottom: 1px solid var(--ink-faint);
+      font-size: 0.7rem;
+    }
+
+    .nutrition__row dt { font-weight: 500; }
+    .nutrition__row dd { margin: 0; font-weight: 600; font-variant-numeric: tabular-nums; }
+
+    .nutrition__row--total {
+      margin-top: 0.25rem;
+      padding-top: 0.6rem;
+      border-top: 4px solid var(--ink);
+      border-bottom: 0;
+      font-size: 0.76rem;
+      font-weight: 600;
+    }
+
+    .nutrition__fine {
+      padding: 0.65rem 1.05rem 0;
+      font-size: 0.56rem;
+      line-height: 1.55;
+      color: var(--ink-soft);
+    }
+
+    .barcode {
+      height: 30px;
+      margin: 0.85rem 1.05rem 0;
+      background: repeating-linear-gradient(
+        90deg,
+        var(--ink) 0 2px,
+        transparent 2px 4px,
+        var(--ink) 4px 6px,
+        transparent 6px 10px,
+        var(--ink) 10px 11px,
+        transparent 11px 14px
+      );
+    }
+
+    /* ------------------------------------------------------------------ ticker */
+    .ticker {
+      overflow: hidden;
+      border-block: var(--border);
+      background: var(--mustard);
+    }
+
+    .ticker__track {
+      display: flex;
+      width: max-content;
+      padding-block: 0.62rem;
+      animation: ticker 26s linear infinite;
+    }
+
+    .ticker:hover .ticker__track { animation-play-state: paused; }
+
+    .ticker__track span {
+      display: block;
+      padding-right: 2rem;
+      font-size: 0.64rem;
+      font-weight: 600;
+      letter-spacing: 0.18em;
+      line-height: 1.3;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+
+    /* ------------------------------------------------------------------ counter */
+    .counter { padding-block: clamp(3.5rem, 8vw, 7rem); }
+
+    .counter__grid {
+      display: grid;
+      gap: clamp(2rem, 5vw, 4rem);
+    }
+
+    .counter__head { position: relative; }
+
+    .kicker {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.55rem;
+      font-size: 0.6rem;
+      font-weight: 600;
+      letter-spacing: 0.18em;
+      line-height: 1.2;
+      text-transform: uppercase;
+    }
+
+    .kicker::before {
+      content: "";
+      width: 28px;
+      height: 2px;
+      background: var(--teal);
+    }
+
+    .counter__title {
+      margin-top: 0.85rem;
+      font-size: clamp(2.7rem, 6.5vw, 4.8rem);
+      line-height: 0.88;
+      letter-spacing: -0.05em;
+    }
+
+    .counter__intro {
+      max-width: 34ch;
+      margin-top: 1.1rem;
+      font-size: 0.84rem;
+      line-height: 1.7;
+      color: var(--ink-soft);
+    }
+
+    .counter__stamp {
+      --rot: 1.5deg;
+      margin-top: 1.8rem;
+    }
+
+    .menu-list {
+      margin: 0;
+      padding: 0;
+      border-top: var(--border);
+      list-style: none;
+    }
+
+    .menu-item {
+      display: grid;
+      grid-template-columns: 2.4rem minmax(0, 1fr);
+      gap: 0.25rem 0.9rem;
+      padding-block: 1.3rem;
+      border-bottom: 1.5px dashed var(--ink-rule);
+      transition: background-color 0.15s ease;
+    }
+
+    .menu-item:hover { background: rgba(232, 169, 43, 0.22); }
+
+    .menu-item__no {
+      grid-row: 1 / span 3;
+      font-family: var(--font-display);
+      font-size: 1.55rem;
+      font-weight: 900;
+      font-variant-numeric: tabular-nums;
+      line-height: 1;
+      color: var(--tomato);
+    }
+
+    .menu-item h3 {
+      font-size: 1.45rem;
+      line-height: 1;
+      letter-spacing: -0.04em;
+    }
+
+    .menu-item p {
+      grid-column: 2;
+      max-width: 48ch;
+      margin-top: 0.35rem;
+      font-size: 0.8rem;
+      line-height: 1.65;
+      color: var(--ink-soft);
+    }
+
+    .menu-item__tag {
+      grid-column: 2;
+      justify-self: start;
+      margin-top: 0.55rem;
+      padding: 0.16rem 0.4rem;
+      border: 1.5px solid var(--ink);
+      border-radius: 2px;
+      font-size: 0.55rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      line-height: 1.3;
+      text-transform: uppercase;
+    }
+
+    /* ------------------------------------------------------------------ team */
+    .team {
+      position: relative;
+      overflow: hidden;
+      padding-block: clamp(3.5rem, 8vw, 7rem);
+      border-block: var(--border);
+      background: var(--tomato);
+      color: var(--paper);
+    }
+
+    /* one halftone moment, kept faint enough to stay a texture */
+    .team::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background-image: radial-gradient(rgba(43, 29, 20, 0.28) 1px, transparent 1.1px);
+      background-size: 10px 10px;
+      opacity: 0.4;
+      pointer-events: none;
+    }
+
+    .team .wrap { position: relative; z-index: 1; }
+
+    .team__head { max-width: 36rem; }
+
+    .team__stamp { --rot: -1.5deg; }
+
+    .team__title {
+      margin-top: 1.1rem;
+      font-size: clamp(2.8rem, 7vw, 5.5rem);
+      line-height: 0.86;
+      letter-spacing: -0.05em;
+      color: var(--paper);
+      text-wrap: balance;
+    }
+
+    .team__note {
+      --rot: -0.8deg;
+      display: inline-block;
+      max-width: 34ch;
+      margin-top: 1.4rem;
+      padding: 0.5rem 0.65rem;
+      border: var(--border);
+      background: var(--paper);
+      box-shadow: var(--shadow-sm);
+      color: var(--ink);
+      font-size: 0.7rem;
+      line-height: 1.5;
+      transform: rotate(var(--rot));
+    }
+
+    .team__note:hover { animation: jiggle 0.3s steps(2, end); }
+
+    .staff {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr);
+      gap: 1.5rem;
+      max-width: 380px;
+      margin: 2.6rem auto 0;
+    }
+
+    .staff-card {
+      position: relative;
+      display: block;
+      padding: 8px 8px 12px;
+      border: var(--border);
+      background: var(--paper);
+      box-shadow: var(--shadow);
+      color: var(--ink);
+      text-decoration: none;
+      transform: rotate(var(--tilt, 0deg));
+    }
+
+    /* a scrap of tape, because these are pinned to the wall */
+    .staff-card::before {
+      content: "";
+      position: absolute;
+      top: -10px;
+      left: 50%;
+      width: 48px;
+      height: 19px;
+      border: 1px solid rgba(43, 29, 20, 0.24);
+      background: rgba(244, 234, 213, 0.72);
+      transform: translateX(-50%) rotate(-3deg);
+    }
+
+    .staff-card:nth-child(1) { --tilt: -1.4deg; --aspect: 4 / 5; }
+    .staff-card:nth-child(2) { --tilt: 1.1deg; --aspect: 1 / 1; }
+    .staff-card:nth-child(3) { --tilt: -0.8deg; --aspect: 4 / 5; }
+    .staff-card:nth-child(4) { --tilt: 1.5deg; --aspect: 3 / 4; }
+
+    .staff-card img {
+      width: 100%;
+      aspect-ratio: var(--aspect, 4 / 5);
+      border: 2px solid var(--ink);
+      object-fit: cover;
+      object-position: center 30%;
+      background: var(--paper);
+      filter: saturate(0.92);
+    }
+
+    .staff-card__body {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 0.3rem 0.5rem;
+      padding: 0.75rem 0.2rem 0.15rem;
+    }
+
+    .staff-card h3 {
+      grid-column: 1 / -1;
+      font-size: 1.12rem;
+      letter-spacing: -0.03em;
+      line-height: 1;
+    }
+
+    .staff-card__role {
+      justify-self: start;
+      padding: 0.17rem 0.42rem;
+      border: 1.5px solid var(--ink);
+      border-radius: 999px;
+      background: var(--mustard);
+      font-size: 0.52rem;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      line-height: 1.3;
+      text-transform: uppercase;
+    }
+
+    .staff-card__cta {
+      justify-self: end;
+      align-self: center;
+      font-size: 0.56rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      text-decoration: underline;
+      text-decoration-color: var(--tomato);
+      text-decoration-thickness: 2px;
+    }
+
+    .staff-card:hover { animation: wobble 0.36s steps(3, end); }
+
+    /* Keep the focus ring inside the card so tomato stays visible on tomato. */
+    .staff-card:focus-visible { outline-offset: -6px; }
+
+    /* ------------------------------------------------------------------ footer */
+    .footer {
+      padding-block: 3rem 1.5rem;
+      background: var(--ink);
+      color: var(--paper);
+    }
+
+    .footer__top {
+      display: grid;
+      gap: 2rem;
+    }
+
+    .footer__brand {
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+    }
+
+    .brand__mark--footer {
+      border-color: var(--paper);
+      box-shadow: 3px 3px 0 var(--paper);
+    }
+
+    .footer__brand p {
+      font-family: var(--font-display);
+      font-size: 1.7rem;
+      font-weight: 900;
+      letter-spacing: -0.04em;
+      line-height: 0.9;
+    }
+
+    .footer__brand small {
+      display: block;
+      margin-top: 0.35rem;
+      font-family: var(--font-mono);
+      font-size: 0.52rem;
+      font-weight: 500;
+      letter-spacing: 0.13em;
+      text-transform: uppercase;
+      color: var(--paper-soft);
+    }
+
+    .footer__note {
+      max-width: 36ch;
+      font-size: 0.76rem;
+      line-height: 1.65;
+      color: var(--paper-soft);
+    }
+
+    .footer__note strong {
+      display: block;
+      margin-bottom: 0.2rem;
+      font-family: var(--font-display);
+      font-size: 1.35rem;
+      font-weight: 900;
+      letter-spacing: -0.03em;
+      line-height: 1;
+      color: var(--paper);
+    }
+
+    .footer__links {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0.35rem;
+      font-size: 0.62rem;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    .footer__links a { text-decoration-color: var(--mustard); }
+    .footer__links a:hover { color: var(--mustard); }
+
+    .footer__bottom {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      margin-top: 2.4rem;
+      padding-top: 1.1rem;
+      border-top: 1px dashed rgba(244, 234, 213, 0.35);
+      font-size: 0.55rem;
+      letter-spacing: 0.08em;
+      line-height: 1.4;
+      text-transform: uppercase;
+      color: var(--paper-soft);
+    }
+
+    .barcode--light {
+      width: 108px;
+      height: 24px;
+      margin: 0;
+      background: repeating-linear-gradient(
+        90deg,
+        var(--paper) 0 2px,
+        transparent 2px 5px,
+        var(--paper) 5px 6px,
+        transparent 6px 10px,
+        var(--paper) 10px 14px,
+        transparent 14px 16px
+      );
+    }
+
+    /* ------------------------------------------------------------------ motion */
+    @keyframes rise {
+      from { opacity: 0; transform: translateY(14px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes ticker {
+      to { transform: translateX(-50%); }
+    }
+
+    @keyframes jiggle {
+      0%, 100% { transform: rotate(var(--rot, -2deg)); }
+      50% { transform: rotate(calc(var(--rot, -2deg) + 2deg)) translateY(-2px); }
+    }
+
+    @keyframes wobble {
+      0%, 100% { transform: rotate(var(--tilt, -1deg)); }
+      35% { transform: rotate(calc(var(--tilt, -1deg) - 1.2deg)) translateY(-4px); }
+      70% { transform: rotate(calc(var(--tilt, -1deg) + 0.8deg)) translateY(-1px); }
+    }
+
+    @keyframes wobble-lift {
+      0%, 100% { transform: rotate(var(--tilt, -1deg)) translateY(var(--lift, 0px)); }
+      35% { transform: rotate(calc(var(--tilt, -1deg) - 1.2deg)) translateY(calc(var(--lift, 0px) - 4px)); }
+      70% { transform: rotate(calc(var(--tilt, -1deg) + 0.8deg)) translateY(calc(var(--lift, 0px) - 1px)); }
+    }
+
+    .hero__copy { animation: rise 0.5s steps(4, end) both; }
+    .hero__label { animation: rise 0.5s 0.12s steps(4, end) both; }
+
+    /* ------------------------------------------------------------------ breakpoints */
+    @media (min-width: 600px) {
+      .staff {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        max-width: none;
+      }
+      .staff-card:nth-child(even) { margin-top: 2rem; }
+    }
+
+    @media (min-width: 640px) {
+      .menu-item { grid-template-columns: 3.3rem minmax(0, 1fr) auto; align-items: start; }
+      .menu-item__no { grid-row: 1; }
+      .menu-item h3 { grid-column: 2; }
+      .menu-item p { grid-column: 2; grid-row: 2; }
+      .menu-item__tag { grid-column: 3; grid-row: 1 / span 2; align-self: start; margin-top: 0.2rem; }
+    }
+
+    @media (min-width: 760px) {
+      .footer__top { grid-template-columns: 1fr 1fr; align-items: end; }
+      .footer__links { grid-column: 1 / -1; flex-direction: row; gap: 1.2rem; }
+    }
+
+    @media (min-width: 900px) {
+      .hero__grid {
+        grid-template-columns: minmax(0, 1.45fr) minmax(300px, 0.85fr);
+        align-items: center;
+      }
+
+      .hero__label { justify-self: end; }
+
+      .counter__grid {
+        grid-template-columns: 0.85fr 1.15fr;
+        align-items: start;
+      }
+
+      .counter__head { position: sticky; top: 2rem; }
+
+      .staff {
+        grid-template-columns: 1.05fr 0.9fr 1.1fr 0.95fr;
+        gap: 1.15rem;
+        max-width: none;
+        margin-top: 3.2rem;
+      }
+
+      .staff-card:nth-child(even) { margin-top: 0; }
+      .staff-card:nth-child(1) { --lift: 0px; }
+      .staff-card:nth-child(2) { --lift: 2.1rem; }
+      .staff-card:nth-child(3) { --lift: 0.5rem; }
+      .staff-card:nth-child(4) { --lift: 2.6rem; }
+
+      .staff-card { transform: rotate(var(--tilt, 0deg)) translateY(var(--lift, 0px)); }
+      .staff-card:hover { animation-name: wobble-lift; }
+
+      .footer__top { grid-template-columns: 1fr 1fr auto; }
+      .footer__links { grid-column: auto; flex-direction: column; gap: 0.35rem; }
+    }
+
+    @media (max-width: 639px) {
+      .masthead__tag { display: none; }
+      .masthead__link { font-size: 0.58rem; }
+      .hero__actions .btn { flex: 1 1 180px; }
     }
 
     @media (prefers-reduced-motion: reduce) {
-      *, *::before, *::after { animation: none !important; transition: none !important; }
+      html { scroll-behavior: auto; }
+      *, *::before, *::after {
+        animation: none !important;
+        transition: none !important;
+      }
+      .ticker__track { animation: none; }
     }
   </style>
 </head>
 <body>
-  <main>
-    <div class="brand">
-      <span class="mark" aria-hidden="true">
-        <svg viewBox="0 0 64 64" fill="currentColor"><path d="M14 48V16h7l11 16 11-16h7v32h-8V30L32 46 22 30v18z"/></svg>
-      </span>
-      MacroBase
-    </div>
+  <a class="skip-link" href="#main">Skip to content</a>
 
-    <div class="badge"><span class="dot" aria-hidden="true"></span> Launching soon</div>
-
-    <h1>Your macros.<br /><em>Decoded.</em></h1>
-
-    <p>
-      Food, training and recovery in one brutally simple dashboard.
-      We're putting the finishing touches on it — check back soon.
-    </p>
-
-    <div class="links">
-      <a class="btn primary" href="https://github.com/conormccr19/MacroBase" target="_blank" rel="noopener noreferrer">
-        Follow the build
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+  <header class="masthead">
+    <div class="wrap masthead__inner">
+      <a class="brand" href="#top" aria-label="MacroBase — back to top">
+        <span class="brand__mark" aria-hidden="true">M</span>
+        <span class="brand__word">MacroBase<span>Est. 2026 · Ireland</span></span>
       </a>
-      <a class="btn ghost" href="https://github.com/conormccr19/MacroBase/issues" target="_blank" rel="noopener noreferrer">
-        Get in touch
-      </a>
+      <p class="masthead__tag">The base layer for hitting your numbers.</p>
+      <a class="masthead__link" href="https://github.com/conormccr19/MacroBase" target="_blank" rel="noopener noreferrer">GitHub <span aria-hidden="true">↗</span></a>
     </div>
+  </header>
 
-    <section class="team" aria-labelledby="team-title">
-      <p class="eyebrow">The team</p>
-      <h2 id="team-title">Four people, one base.</h2>
+  <main id="main">
+    <section class="hero" id="top" aria-labelledby="hero-title">
+      <div class="wrap hero__grid">
+        <div class="hero__copy">
+          <div class="hero__meta">
+            <span class="stamp stamp--mustard">Coming soon</span>
+            <span class="hero__batch">Batch no. 001 · Dublin</span>
+          </div>
 
-      <div class="team-grid">
-        <article class="member">
-          <img src="conor%20mccracken.png" alt="Conor McCracken" loading="lazy" />
-          <h3>Conor McCracken</h3>
-          <p class="role">Backend</p>
-        </article>
+          <h1 class="hero__title" id="hero-title">
+            Your macros.
+            <span class="hero__decoded">Decoded.
+              <svg class="hero__underline" viewBox="0 0 300 12" preserveAspectRatio="none" aria-hidden="true">
+                <path d="M2 9C62 3 152 2 298 6" />
+              </svg>
+            </span>
+          </h1>
 
-        <article class="member">
-          <img src="conor%20murphy.png" alt="Conor Murphy" loading="lazy" />
-          <h3>Conor Murphy</h3>
-          <p class="role">Hardware</p>
-        </article>
+          <p class="hero__lede">
+            Food, training and recovery in one brutally simple dashboard.
+            The numbers you need, minus the spreadsheet archaeology.
+          </p>
 
-        <article class="member">
-          <img src="Richie%20Orji.png" alt="Richie Orji" loading="lazy" />
-          <h3>Richie Orji</h3>
-          <p class="role">Frontend</p>
-        </article>
+          <div class="hero__actions">
+            <a class="btn btn--primary" href="https://github.com/conormccr19/MacroBase" target="_blank" rel="noopener noreferrer">
+              Follow the build
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" /></svg>
+            </a>
+            <a class="btn" href="https://github.com/conormccr19/MacroBase/issues" target="_blank" rel="noopener noreferrer">
+              Get in touch
+            </a>
+          </div>
 
-        <article class="member">
-          <img src="Kamil%20Seidou.png" alt="Kamil Seidou" loading="lazy" />
-          <h3>Kamil Seidou</h3>
-          <p class="role">Database</p>
-        </article>
+          <p class="hero__fineprint"><span aria-hidden="true">*</span> Serving suggestion: one dashboard, daily.</p>
+        </div>
+
+        <aside class="hero__label" aria-labelledby="nutrition-title">
+          <div class="price-tag" aria-hidden="true">
+            Early look
+            <strong>€0.00</strong>
+            No. 001
+          </div>
+
+          <div class="nutrition">
+            <div class="nutrition__head">
+              <p class="nutrition__brand">MacroBase</p>
+              <h2 id="nutrition-title">Nutrition Facts</h2>
+              <p class="nutrition__sub">Serving size: 1 dashboard</p>
+            </div>
+            <div class="nutrition__bar" aria-hidden="true"></div>
+            <dl class="nutrition__body">
+              <div class="nutrition__row"><dt>Servings per day</dt><dd>1</dd></div>
+              <div class="nutrition__row"><dt>Protein</dt><dd>100%</dd></div>
+              <div class="nutrition__row"><dt>Carbs</dt><dd>100%</dd></div>
+              <div class="nutrition__row"><dt>Fat</dt><dd>100%</dd></div>
+              <div class="nutrition__row"><dt>Guesswork</dt><dd>0%</dd></div>
+              <div class="nutrition__row"><dt>Hidden fees</dt><dd>0g</dd></div>
+              <div class="nutrition__row nutrition__row--total"><dt>Patience</dt><dd>1 scoop</dd></div>
+            </dl>
+            <p class="nutrition__fine"><strong>Ingredients:</strong> food, training, recovery. <strong>Contains:</strong> no filler.</p>
+            <div class="barcode" aria-hidden="true"></div>
+          </div>
+        </aside>
       </div>
     </section>
 
-    <footer>© <span id="year">2026</span> MacroBase · Built in Ireland</footer>
+    <div class="ticker" aria-hidden="true">
+      <div class="ticker__track">
+        <span>Macros ✶ Training ✶ Recovery ✶ No guesswork ✶ Built in Ireland ✶ Macros ✶ Training ✶ Recovery ✶ No guesswork ✶ Built in Ireland ✶ Macros ✶ Training ✶ Recovery ✶ No guesswork ✶ Built in Ireland ✶ Macros ✶ Training ✶ Recovery ✶ No guesswork ✶ Built in Ireland ✶ </span>
+        <span>Macros ✶ Training ✶ Recovery ✶ No guesswork ✶ Built in Ireland ✶ Macros ✶ Training ✶ Recovery ✶ No guesswork ✶ Built in Ireland ✶ Macros ✶ Training ✶ Recovery ✶ No guesswork ✶ Built in Ireland ✶ Macros ✶ Training ✶ Recovery ✶ No guesswork ✶ Built in Ireland ✶ </span>
+      </div>
+    </div>
+
+    <section class="counter" aria-labelledby="counter-title">
+      <div class="wrap counter__grid">
+        <header class="counter__head">
+          <p class="kicker">The menu</p>
+          <h2 class="counter__title" id="counter-title">What's on<br />the counter.</h2>
+          <p class="counter__intro">Three things, done properly. The rest is garnish.</p>
+          <span class="stamp counter__stamp">In development</span>
+        </header>
+
+        <ol class="menu-list">
+          <li class="menu-item">
+            <span class="menu-item__no">01</span>
+            <h3>Macro tracking</h3>
+            <p>Log a meal in under five seconds. Recent foods, saved combos and copy-yesterday do the heavy lifting.</p>
+            <span class="menu-item__tag">P / C / F · kcal</span>
+          </li>
+          <li class="menu-item">
+            <span class="menu-item__no">02</span>
+            <h3>Training log</h3>
+            <p>Sets, reps, RPE and PRs in one place. Progress you can actually see, not spreadsheet archaeology.</p>
+            <span class="menu-item__tag">Strength · volume</span>
+          </li>
+          <li class="menu-item">
+            <span class="menu-item__no">03</span>
+            <h3>Recovery signals</h3>
+            <p>Sleep, steps and readiness, scored daily. Push when it's green. Rest when it isn't.</p>
+            <span class="menu-item__tag">Sleep · HRV</span>
+          </li>
+        </ol>
+      </div>
+    </section>
+
+    <section class="team" id="team" aria-labelledby="team-title">
+      <div class="wrap">
+        <div class="team__head">
+          <span class="stamp team__stamp">The staff</span>
+          <h2 class="team__title" id="team-title">Behind the counter.</h2>
+          <p class="team__note">Four people. One shared distaste for bad dashboards.</p>
+        </div>
+
+        <div class="staff">
+          <a class="staff-card" href="https://github.com/conormccr19" target="_blank" rel="noopener noreferrer">
+            <img src="conor%20mccracken.png" alt="Portrait of Conor McCracken" loading="lazy" />
+            <div class="staff-card__body">
+              <h3>Conor McCracken</h3>
+              <span class="staff-card__role">Backend</span>
+              <span class="staff-card__cta">GitHub <span aria-hidden="true">↗</span></span>
+            </div>
+          </a>
+
+          <a class="staff-card" href="https://github.com/conormurphyy" target="_blank" rel="noopener noreferrer">
+            <img src="conor%20murphy.png" alt="Portrait of Conor Murphy" loading="lazy" />
+            <div class="staff-card__body">
+              <h3>Conor Murphy</h3>
+              <span class="staff-card__role">Hardware</span>
+              <span class="staff-card__cta">GitHub <span aria-hidden="true">↗</span></span>
+            </div>
+          </a>
+
+          <a class="staff-card" href="https://github.com/xRichO7" target="_blank" rel="noopener noreferrer">
+            <img src="Richie%20Orji.png" alt="Portrait of Richie Orji" loading="lazy" />
+            <div class="staff-card__body">
+              <h3>Richie Orji</h3>
+              <span class="staff-card__role">Frontend</span>
+              <span class="staff-card__cta">GitHub <span aria-hidden="true">↗</span></span>
+            </div>
+          </a>
+
+          <a class="staff-card" href="https://github.com/jojomoment" target="_blank" rel="noopener noreferrer">
+            <img src="Kamil%20Seidou.png" alt="Portrait of Kamil Seidou" loading="lazy" />
+            <div class="staff-card__body">
+              <h3>Kamil Seidou</h3>
+              <span class="staff-card__role">Database</span>
+              <span class="staff-card__cta">GitHub <span aria-hidden="true">↗</span></span>
+            </div>
+          </a>
+        </div>
+      </div>
+    </section>
   </main>
+
+  <footer class="footer">
+    <div class="wrap footer__top">
+      <div class="footer__brand">
+        <span class="brand__mark brand__mark--footer" aria-hidden="true">M</span>
+        <p>MacroBase<small>Est. 2026 · Built in Ireland</small></p>
+      </div>
+
+      <p class="footer__note">
+        <strong>Still cooking.</strong>
+        The repo's open, the kettle's on. Pull up a stool.
+      </p>
+
+      <div class="footer__links">
+        <a href="https://github.com/conormccr19/MacroBase" target="_blank" rel="noopener noreferrer">GitHub <span aria-hidden="true">↗</span></a>
+        <a href="https://github.com/conormccr19/MacroBase/issues" target="_blank" rel="noopener noreferrer">Feedback <span aria-hidden="true">↗</span></a>
+      </div>
+    </div>
+
+    <div class="wrap footer__bottom">
+      <span>© <span id="year">2026</span> MacroBase</span>
+      <span>No cookies. No newsletter pop-up. Yet.</span>
+      <span class="barcode barcode--light" aria-hidden="true"></span>
+    </div>
+  </footer>
 
   <script>
     document.getElementById("year").textContent = new Date().getFullYear();
