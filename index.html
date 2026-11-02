@@ -64,7 +64,7 @@
       position: relative;
       z-index: 1;
       text-align: center;
-      max-width: 640px;
+      max-width: 860px;
     }
 
     .brand {
@@ -190,6 +190,79 @@
 
     a.btn svg { width: 15px; height: 15px; }
 
+    .team {
+      margin-top: 64px;
+      padding-top: 44px;
+      border-top: 1px solid var(--line);
+    }
+
+    .eyebrow {
+      margin: 0 auto;
+      font-size: 0.68rem;
+      font-weight: 600;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--lime);
+    }
+
+    .team h2 {
+      margin: 10px 0 28px;
+      font-size: clamp(1.5rem, 3.6vw, 2rem);
+      letter-spacing: -0.04em;
+      font-weight: 700;
+    }
+
+    .team-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 14px;
+      text-align: left;
+    }
+
+    .member {
+      padding: 10px 10px 16px;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      background: rgba(255, 255, 255, 0.03);
+      transition: transform 0.25s ease, background 0.25s ease, border-color 0.25s ease;
+    }
+
+    .member:hover {
+      transform: translateY(-3px);
+      background: rgba(255, 255, 255, 0.055);
+      border-color: rgba(255, 255, 255, 0.2);
+    }
+
+    .member img {
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      object-fit: cover;
+      object-position: center 30%;
+      border-radius: 11px;
+      background: #101214;
+    }
+
+    .member h3 {
+      margin: 13px 2px 0;
+      font-size: 0.9rem;
+      font-weight: 600;
+      letter-spacing: -0.01em;
+    }
+
+    .member .role {
+      margin: 3px 2px 0;
+      max-width: none;
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    @media (max-width: 620px) {
+      .team-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+
     footer {
       margin-top: 56px;
       font-size: 0.72rem;
@@ -227,14 +300,45 @@
     </p>
 
     <div class="links">
-      <a class="btn primary" href="https://github.com/conormccr19/macro-base">
+      <a class="btn primary" href="https://github.com/conormccr19/MacroBase" target="_blank" rel="noopener noreferrer">
         Follow the build
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
       </a>
-      <a class="btn ghost" href="https://github.com/conormccr19/macro-base/issues">
+      <a class="btn ghost" href="https://github.com/conormccr19/MacroBase/issues" target="_blank" rel="noopener noreferrer">
         Get in touch
       </a>
     </div>
+
+    <section class="team" aria-labelledby="team-title">
+      <p class="eyebrow">The team</p>
+      <h2 id="team-title">Four people, one base.</h2>
+
+      <div class="team-grid">
+        <article class="member">
+          <img src="conor%20mccracken.png" alt="Conor McCracken" loading="lazy" />
+          <h3>Conor McCracken</h3>
+          <p class="role">Backend</p>
+        </article>
+
+        <article class="member">
+          <img src="conor%20murphy.png" alt="Conor Murphy" loading="lazy" />
+          <h3>Conor Murphy</h3>
+          <p class="role">Hardware</p>
+        </article>
+
+        <article class="member">
+          <img src="Richie%20Orji.png" alt="Richie Orji" loading="lazy" />
+          <h3>Richie Orji</h3>
+          <p class="role">Frontend</p>
+        </article>
+
+        <article class="member">
+          <img src="Kamil%20Seidou.png" alt="Kamil Seidou" loading="lazy" />
+          <h3>Kamil Seidou</h3>
+          <p class="role">Database</p>
+        </article>
+      </div>
+    </section>
 
     <footer>© <span id="year">2026</span> MacroBase · Built in Ireland</footer>
   </main>
